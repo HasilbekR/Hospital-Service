@@ -2,14 +2,14 @@ server:
   port: 8086
 
 
-  spring:
+spring:
     application:
       name: HOSPITAL-SERVICE
     datasource:
       driver-class-name: org.postgresql.Driver
-      url: jdbc:postgresql://localhost:5432/hospital_service_db
+      url: jdbc:postgresql://localhost:5432/lesson02_db
       username: postgres
-      password: 20229
+      password: 12345
     jpa:
       hibernate:
         ddl-auto: update
