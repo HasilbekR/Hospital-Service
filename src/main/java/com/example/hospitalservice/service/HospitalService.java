@@ -36,7 +36,8 @@ public class HospitalService{
     public String delete(UUID hospitalId){
         HospitalEntity hospitalEntity = hospitalRepository.findHospitalEntityById(hospitalId)
                 .orElseThrow(() -> new DataNotFoundException("Hospital not found"));
-        hospitalEntity.setStatus(HospitalStatus.NOT_ACTIVE);
+//        hospitalEntity.setStatus(HospitalStatus.NOT_ACTIVE);
+        hospitalRepository.delete(hospitalEntity);
         return "Successfully deleted";
     }
 
@@ -45,6 +46,7 @@ public class HospitalService{
         HospitalEntity hospitalEntity = hospitalRepository
                 .findHospitalEntityById(hospitalId).orElseThrow(
                         () -> new DataNotFoundException("Hospital not found!"));
+        modelMapper.map(update ,hospitalEntity);
         return hospitalRepository.save(hospitalEntity);
     }
 }
