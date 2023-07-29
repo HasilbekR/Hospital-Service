@@ -1,4 +1,4 @@
-package com.example.hospitalservice.service;
+package com.example.hospitalservice.service.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

@@ -1,8 +1,8 @@
 package com.example.hospitalservice.config;
 
 import com.example.hospitalservice.filter.JwtTokenFilter;
-import com.example.hospitalservice.service.AuthenticationService;
-import com.example.hospitalservice.service.JwtService;
+import com.example.hospitalservice.service.auth.AuthenticationService;
+import com.example.hospitalservice.service.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
