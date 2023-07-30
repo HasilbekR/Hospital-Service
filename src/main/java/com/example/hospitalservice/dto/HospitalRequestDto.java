@@ -11,8 +11,7 @@ import lombok.Setter;
 @Setter
 public class HospitalRequestDto {
     private String name;
-    private String number;
     private String address;
     private String location;
-    private boolean isPrivate;
+
 }
