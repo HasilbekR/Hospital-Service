@@ -26,8 +26,8 @@ public class HospitalController {
 
     @GetMapping("/getAllHospital")
     public List<HospitalEntity> getAll(
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "1") int size
+            @RequestParam(required = false) int page,
+            @RequestParam(required = false) int size
     ){
         return hospitalService.getAll(page,size);
     }

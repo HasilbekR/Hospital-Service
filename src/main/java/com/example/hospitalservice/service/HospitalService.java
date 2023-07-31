@@ -33,12 +33,11 @@ public class HospitalService{
         return hospitalRepository.findAll(pageable).getContent();
     }
 
-    public String delete(UUID hospitalId){
+    public void delete(UUID hospitalId){
         HospitalEntity hospitalEntity = hospitalRepository.findHospitalEntityById(hospitalId)
                 .orElseThrow(() -> new DataNotFoundException("Hospital not found"));
-//        hospitalEntity.setStatus(HospitalStatus.NOT_ACTIVE);
-        hospitalRepository.delete(hospitalEntity);
-        return "Successfully deleted";
+        hospitalEntity.setStatus(HospitalStatus.NOT_ACTIVE);
+        hospitalRepository.save(hospitalEntity);
     }
 
 
