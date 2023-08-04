@@ -9,9 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class HospitalRequestDto {
-    private String name;
-    private String address;
-    private String location;
-
+public class LocationRequestDto {
+    private Double latitude;
+    private Double longitude;
 }

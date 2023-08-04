@@ -28,10 +28,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
-//                .authorizeHttpRequests((authorizer) -> {
-//                    authorizer
-//
-//                })
+                .authorizeHttpRequests((authorizer) -> {
+                    authorizer
+                            .anyRequest().permitAll();
+
+                })
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenFilter(authenticationService, jwtService),
                         UsernamePasswordAuthenticationFilter.class)

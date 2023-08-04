@@ -1,9 +1,9 @@
 package com.example.hospitalservice.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 
 @Entity(name = "hospital")
@@ -14,8 +14,15 @@ import lombok.*;
 @Builder
 public class HospitalEntity extends BaseEntity {
     private String name;
+    @Column(unique = true, nullable = false)
     private String address;
-    private String location;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    private LocationEntity location;
+    private String phoneNumber;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hospital_id",referencedColumnName = "id")
+    private List<WorkingHours> workingHours;
     @Enumerated(EnumType.STRING)
     private HospitalStatus status;
 }

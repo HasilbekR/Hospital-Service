@@ -1,7 +1,7 @@
 package com.example.hospitalservice.controller;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
-import com.example.hospitalservice.dto.HospitalRequestDto;
+import com.example.hospitalservice.dto.HospitalSaveDto;
 import com.example.hospitalservice.service.HospitalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +17,14 @@ public class HospitalController {
     private final HospitalService hospitalService;
 
 
-    @PostMapping("/addHospital")
+    @PostMapping("/save")
     public HospitalEntity save(
-            @RequestBody HospitalRequestDto hospitalRequestDto
+            @RequestBody HospitalSaveDto hospitalRequestDto
             ){
         return hospitalService.addHospital(hospitalRequestDto);
     }
 
-    @GetMapping("/getAllHospital")
+    @GetMapping("/getAll")
     public List<HospitalEntity> getAll(
             @RequestParam(required = false) int page,
             @RequestParam(required = false) int size
@@ -35,7 +35,7 @@ public class HospitalController {
     @PutMapping("/{hospitalId}/update")
     private HospitalEntity update(
             @PathVariable UUID hospitalId,
-            @RequestBody HospitalRequestDto hospitalRequestDto
+            @RequestBody HospitalSaveDto hospitalRequestDto
             ){
         return hospitalService.update(hospitalId ,hospitalRequestDto);
     }
@@ -46,5 +46,12 @@ public class HospitalController {
     ){
         hospitalService.delete(hospitalId);
         return "SuccessFully deleted!!";
+    }
+
+    @GetMapping("/{hospitalId}/getLocation")
+    public String getLocation(
+            @PathVariable UUID hospitalId
+    ){
+       return hospitalService.getHospitalLocation(hospitalId);
     }
 }
