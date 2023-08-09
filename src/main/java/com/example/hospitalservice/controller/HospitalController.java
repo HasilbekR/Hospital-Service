@@ -54,4 +54,12 @@ public class HospitalController {
     ){
        return hospitalService.getHospitalLocation(hospitalId);
     }
+
+    @PutMapping("/{hospitalId}/changeStatus")
+    public HospitalEntity changeStatus(
+            @PathVariable UUID hospitalId,
+            @RequestParam String status
+    ){
+        return hospitalService.changeStatus(hospitalId, status);
+    }
 }

@@ -4,6 +4,7 @@ import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
 import com.example.hospitalservice.dto.HospitalSaveDto;
 import com.example.hospitalservice.exceptions.DataNotFoundException;
+import com.example.hospitalservice.exceptions.UserBadRequestException;
 import com.example.hospitalservice.repository.HospitalRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -59,4 +60,20 @@ public class HospitalService{
                 .getLatitude() + "," +
                 hospitalEntity.getLocation().getLongitude();
     }
+
+    public HospitalEntity changeStatus(UUID hospitalId, String status) {
+        HospitalEntity hospitalEntity = hospitalRepository
+                .findHospitalEntityById(hospitalId).orElseThrow(
+                        () -> new DataNotFoundException("Hospital not found!"));
+
+        switch (status.toUpperCase()) {
+            case "ACTIVE" -> hospitalEntity.setStatus(HospitalStatus.ACTIVE);
+            case "IN_PREVENTION" -> hospitalEntity.setStatus(HospitalStatus.IN_PREVENTION);
+            case "NOT_ACTIVE" -> hospitalEntity.setStatus(HospitalStatus.NOT_ACTIVE);
+            default -> throw new UserBadRequestException("Invalid status: " + status);
+        }
+        hospitalRepository.save(hospitalEntity);
+        return hospitalEntity;
+    }
+
 }
