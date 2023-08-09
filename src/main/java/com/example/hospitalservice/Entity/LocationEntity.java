@@ -12,7 +12,7 @@ import lombok.*;
 @Builder
 public class LocationEntity extends BaseEntity{
     @Column(nullable = false, unique = true)
-    private Double latitude;
+    private String latitude;
     @Column(unique = true, nullable = false)
-    private Double longitude;
+    private String longitude;
 }
