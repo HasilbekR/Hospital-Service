@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class LocationRequestDto {
     @NotBlank(message = "Line must not be blank!")
-    private Double latitude;
+    private String latitude;
     @NotBlank(message = "Line must not be blank!")
-    private Double longitude;
+    private String longitude;
 }
