@@ -76,6 +76,7 @@ public class HospitalController {
     }
 
     @PutMapping("/{hospitalId}/changeStatus")
+    @PreAuthorize(value = "hasRole('ADMIN') and hasAuthority('CHANGE_STATUS')")
     public ResponseEntity<HospitalEntity> changeStatus(
             @PathVariable UUID hospitalId,
             @RequestParam String status
