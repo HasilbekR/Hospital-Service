@@ -9,7 +9,7 @@ spring:
       driver-class-name: org.postgresql.Driver
       url: jdbc:postgresql://hospital-db-do-user-14558489-0.b.db.ondigitalocean.com:25060/hospital_service_db
       username: doadmin
-      password: AVNS_ZsEHpELLbPwTvabmXJNdoadmin
+      password: AVNS_ZsEHpELLbPwTvabmXJN
     jpa:
       hibernate:
         ddl-auto: update
