@@ -10,6 +10,8 @@ import com.example.hospitalservice.exceptions.UserBadRequestException;
 import com.example.hospitalservice.repository.HospitalRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +29,10 @@ public class HospitalService{
         return hospitalRepository.save(hospitalEntity);
     }
 
-    public HospitalData getAll(){
+    public HospitalData getAll(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
         return HospitalData.builder()
-                .hospitals(hospitalRepository.findAllHospitals())
+                .hospitals(hospitalRepository.findAll(pageable).getContent())
                 .cities(hospitalRepository.getHospitalCities()).build();
     }
 
@@ -38,7 +41,7 @@ public class HospitalService{
     }
 
     public UUID getHospital(ExchangeDataDto dataDto){
-        return hospitalRepository.findHospitalEntityById(UUID.fromString(dataDto.getSource())).orElseThrow(()-> new DataNotFoundException("Hospital not found")).getId();
+        return hospitalRepository.findHospitalEntitiesById(UUID.fromString(dataDto.getSource())).getId();
     }
     public HospitalEntity getHospitalById(UUID hospitalId){
         return hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(()-> new DataNotFoundException("Hospital not found"));

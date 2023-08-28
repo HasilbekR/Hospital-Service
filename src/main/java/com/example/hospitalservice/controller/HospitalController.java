@@ -28,8 +28,11 @@ public class HospitalController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<HospitalData> getAll(){
-        return ResponseEntity.ok(hospitalService.getAll());
+    public ResponseEntity<HospitalData> getAll(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ){
+        return ResponseEntity.ok(hospitalService.getAll(page, size));
     }
     @GetMapping("/get-all-by-city")
     public List<HospitalEntity> getAllByCity(
@@ -47,8 +50,10 @@ public class HospitalController {
     public String getHospital(
             @RequestBody ExchangeDataDto dataDto
     ){
-        return hospitalService.getHospital(dataDto).toString();
-
+        if(hospitalService.getHospital(dataDto) != null) {
+            return hospitalService.getHospital(dataDto).toString();
+        }
+        return null;
     }
     @PutMapping("/{hospitalId}/update")
     @PreAuthorize(value = "hasRole('SUPER_ADMIN')")
