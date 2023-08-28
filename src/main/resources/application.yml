@@ -1,5 +1,5 @@
 server:
-  port: 8085
+  port: 8083
 
 
 spring:
@@ -7,9 +7,9 @@ spring:
       name: HOSPITAL-SERVICE
     datasource:
       driver-class-name: org.postgresql.Driver
-      url: jdbc:postgresql://localhost:5432/hospital_db
-      username: postgres
-      password: 20229
+      url: jdbc:postgresql://hospital-db-do-user-14558489-0.b.db.ondigitalocean.com:25060/hospital_service_db
+      username: doadmin
+      password: AVNS_ZsEHpELLbPwTvabmXJNdoadmin
     jpa:
       hibernate:
         ddl-auto: update
@@ -21,10 +21,10 @@ spring:
 eureka:
   client:
     service-url:
-      defaultUrl: ${EUREKA_URI:http://localhost:8761/eureka/}
+      defaultUrl: ${EUREKA_URI:http://134.209.20.129:8761/eureka/}
     instance:
       preferIpAddress: true
 
 jwt:
   secret:
-    key: 753778214125442A472D4B6150645367566B59703373367639792F423F452848
+    key: 753778214125442A472D4B6150645367566B59703373367639792F423F4528487782141254367566B5970337336
