@@ -21,10 +21,10 @@ public class HospitalController {
 
 
     @PostMapping("/save")
-    public HospitalEntity save(
+    public ResponseEntity<HospitalEntity> save(
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
-        return hospitalService.addHospital(hospitalRequestDto);
+        return ResponseEntity.ok(hospitalService.addHospital(hospitalRequestDto));
     }
 
     @GetMapping("/get-all")
@@ -42,21 +42,22 @@ public class HospitalController {
             @RequestBody ExchangeDataDto dataDto
     ){
         return hospitalService.getHospital(dataDto).toString();
+
     }
     @PutMapping("/{hospitalId}/update")
-    private HospitalEntity update(
+    private ResponseEntity<HospitalEntity> update(
             @PathVariable UUID hospitalId,
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
-        return hospitalService.update(hospitalId ,hospitalRequestDto);
+        return ResponseEntity.ok(hospitalService.update(hospitalId ,hospitalRequestDto));
     }
 
     @DeleteMapping("/{hospitalId}/delete")
-    public String delete(
+    public ResponseEntity<String> delete(
             @PathVariable UUID hospitalId
     ){
         hospitalService.delete(hospitalId);
-        return "SuccessFully deleted!!";
+        return ResponseEntity.ok("SuccessFully deleted!");
     }
 
     @GetMapping("/{hospitalId}/getLocation")
@@ -67,10 +68,10 @@ public class HospitalController {
     }
 
     @PutMapping("/{hospitalId}/changeStatus")
-    public HospitalEntity changeStatus(
+    public ResponseEntity<HospitalEntity> changeStatus(
             @PathVariable UUID hospitalId,
             @RequestParam String status
     ){
-        return hospitalService.changeStatus(hospitalId, status);
+        return ResponseEntity.ok(hospitalService.changeStatus(hospitalId, status));
     }
 }
