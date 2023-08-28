@@ -29,7 +29,7 @@ public class HospitalService{
 
     public HospitalData getAll(){
         return HospitalData.builder()
-                .hospitals(hospitalRepository.findAll())
+                .hospitals(hospitalRepository.findAllHospitals())
                 .cities(hospitalRepository.getHospitalCities()).build();
     }
 
