@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -22,15 +21,15 @@ public class SecurityConfig {
 
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
-
+    private final String[] permitAll = {"/swagger-ui/**", "/v3/api-docs/**"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests((authorizer) -> {
                     authorizer
-                            .anyRequest().permitAll();
+                            .requestMatchers(permitAll).permitAll()
+                            .anyRequest().authenticated();
 
                 })
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

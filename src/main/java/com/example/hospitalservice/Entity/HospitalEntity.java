@@ -21,7 +21,7 @@ public class HospitalEntity extends BaseEntity {
     private LocationEntity location;
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL)
-    private List<WorkingHours> workingHours;
+    private List<WorkingHoursEntity> workingHours;
     @Enumerated(EnumType.STRING)
     private HospitalStatus status;
 }
