@@ -2,20 +2,16 @@ package com.example.hospitalservice.service;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
-import com.example.hospitalservice.Entity.LocationEntity;
+import com.example.hospitalservice.dto.ExchangeDataDto;
+import com.example.hospitalservice.dto.HospitalData;
 import com.example.hospitalservice.dto.HospitalSaveDto;
-import com.example.hospitalservice.dto.LocationRequestDto;
 import com.example.hospitalservice.exceptions.DataNotFoundException;
 import com.example.hospitalservice.exceptions.UserBadRequestException;
 import com.example.hospitalservice.repository.HospitalRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,10 +27,18 @@ public class HospitalService{
         return hospitalRepository.save(hospitalEntity);
     }
 
+    public HospitalData getAll(){
+        return HospitalData.builder()
+                .hospitals(hospitalRepository.findAll())
+                .cities(hospitalRepository.getHospitalCities()).build();
+    }
 
-    public List<HospitalEntity> getAll(int page , int size){
-        Pageable pageable = PageRequest.of(page, size);
-        return hospitalRepository.findAll(pageable).getContent();
+    public List<HospitalEntity> getAllByCity(String city){
+        return hospitalRepository.findHospitalEntityByCity(city);
+    }
+
+    public UUID getHospital(ExchangeDataDto dataDto){
+        return hospitalRepository.findHospitalEntityById(UUID.fromString(dataDto.getSource())).orElseThrow(()-> new DataNotFoundException("Hospital not found")).getId();
     }
 
     public void delete(UUID hospitalId){

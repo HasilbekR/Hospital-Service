@@ -1,9 +1,12 @@
 package com.example.hospitalservice.controller;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
+import com.example.hospitalservice.dto.ExchangeDataDto;
+import com.example.hospitalservice.dto.HospitalData;
 import com.example.hospitalservice.dto.HospitalSaveDto;
 import com.example.hospitalservice.service.HospitalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,14 +27,22 @@ public class HospitalController {
         return hospitalService.addHospital(hospitalRequestDto);
     }
 
-    @GetMapping("/getAll")
-    public List<HospitalEntity> getAll(
-            @RequestParam(required = false) int page,
-            @RequestParam(required = false) int size
-    ){
-        return hospitalService.getAll(page,size);
+    @GetMapping("/get-all")
+    public ResponseEntity<HospitalData> getAll(){
+        return ResponseEntity.ok(hospitalService.getAll());
     }
-
+    @GetMapping("/get-all-by-city")
+    public List<HospitalEntity> getAllByCity(
+            @RequestParam String city
+    ){
+        return hospitalService.getAllByCity(city);
+    }
+    @PostMapping("/exchange-hospital-id")
+    public String getHospital(
+            @RequestBody ExchangeDataDto dataDto
+    ){
+        return hospitalService.getHospital(dataDto).toString();
+    }
     @PutMapping("/{hospitalId}/update")
     private HospitalEntity update(
             @PathVariable UUID hospitalId,
