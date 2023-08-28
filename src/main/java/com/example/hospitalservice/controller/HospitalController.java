@@ -19,8 +19,6 @@ import java.util.UUID;
 public class HospitalController {
 
     private final HospitalService hospitalService;
-
-
     @PostMapping("/save")
     @PreAuthorize(value = "hasRole('OWNER')")
     public ResponseEntity<HospitalEntity> save(
@@ -38,6 +36,12 @@ public class HospitalController {
             @RequestParam String city
     ){
         return hospitalService.getAllByCity(city);
+    }
+    @GetMapping("/{hospitalId}/get-hospital")
+    public ResponseEntity<HospitalEntity> getHospital(
+            @PathVariable UUID hospitalId
+    ){
+        return ResponseEntity.ok(hospitalService.getHospitalById(hospitalId));
     }
     @PostMapping("/exchange-hospital-id")
     public String getHospital(

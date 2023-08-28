@@ -40,6 +40,9 @@ public class HospitalService{
     public UUID getHospital(ExchangeDataDto dataDto){
         return hospitalRepository.findHospitalEntityById(UUID.fromString(dataDto.getSource())).orElseThrow(()-> new DataNotFoundException("Hospital not found")).getId();
     }
+    public HospitalEntity getHospitalById(UUID hospitalId){
+        return hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(()-> new DataNotFoundException("Hospital not found"));
+    }
 
     public void delete(UUID hospitalId){
         HospitalEntity hospitalEntity = hospitalRepository.findHospitalEntityById(hospitalId)
