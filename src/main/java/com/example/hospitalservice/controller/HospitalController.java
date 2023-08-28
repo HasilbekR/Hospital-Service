@@ -43,7 +43,7 @@ public class HospitalController {
     ){
         return ResponseEntity.ok(hospitalService.getHospitalById(hospitalId));
     }
-    @PostMapping("/exchange-hospital-id")
+    @PostMapping("/send-id")
     public String getHospital(
             @RequestBody ExchangeDataDto dataDto
     ){
