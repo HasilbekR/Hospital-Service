@@ -4,6 +4,7 @@ import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.dto.HospitalSaveDto;
 import com.example.hospitalservice.service.HospitalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,34 +19,34 @@ public class HospitalController {
 
 
     @PostMapping("/save")
-    public HospitalEntity save(
+    public ResponseEntity<HospitalEntity> save(
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
-        return hospitalService.addHospital(hospitalRequestDto);
+        return ResponseEntity.ok(hospitalService.addHospital(hospitalRequestDto));
     }
 
     @GetMapping("/getAll")
-    public List<HospitalEntity> getAll(
+    public ResponseEntity<List<HospitalEntity>> getAll(
             @RequestParam(required = false) int page,
             @RequestParam(required = false) int size
     ){
-        return hospitalService.getAll(page,size);
+        return ResponseEntity.ok(hospitalService.getAll(page,size));
     }
 
     @PutMapping("/{hospitalId}/update")
-    private HospitalEntity update(
+    private ResponseEntity<HospitalEntity> update(
             @PathVariable UUID hospitalId,
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
-        return hospitalService.update(hospitalId ,hospitalRequestDto);
+        return ResponseEntity.ok(hospitalService.update(hospitalId ,hospitalRequestDto));
     }
 
     @DeleteMapping("/{hospitalId}/delete")
-    public String delete(
+    public ResponseEntity<String> delete(
             @PathVariable UUID hospitalId
     ){
         hospitalService.delete(hospitalId);
-        return "SuccessFully deleted!!";
+        return ResponseEntity.ok("SuccessFully deleted!");
     }
 
     @GetMapping("/{hospitalId}/getLocation")
@@ -56,10 +57,10 @@ public class HospitalController {
     }
 
     @PutMapping("/{hospitalId}/changeStatus")
-    public HospitalEntity changeStatus(
+    public ResponseEntity<HospitalEntity> changeStatus(
             @PathVariable UUID hospitalId,
             @RequestParam String status
     ){
-        return hospitalService.changeStatus(hospitalId, status);
+        return ResponseEntity.ok(hospitalService.changeStatus(hospitalId, status));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.hospitalservice.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +14,11 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WorkingHours extends BaseEntity{
+public class WorkingHoursEntity extends BaseEntity{
+    @Column(nullable = false)
     private String dayOfWeek;
-    private LocalTime openingTime;
-    private LocalTime closingTime;
+    @Column(nullable = false)
+    private String openingTime;
+    @Column(nullable = false)
+    private String closingTime;
 }

@@ -22,7 +22,7 @@ public class HospitalEntity extends BaseEntity {
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "hospital_id",referencedColumnName = "id")
-    private List<WorkingHours> workingHours;
+    private List<WorkingHoursEntity> workingHours;
     @Enumerated(EnumType.STRING)
     private HospitalStatus status;
 }
