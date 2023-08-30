@@ -4,6 +4,7 @@ import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.dto.HospitalSaveDto;
 import com.example.hospitalservice.service.HospitalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class HospitalController {
 
 
     @PostMapping("/save")
+    @PreAuthorize(value = "hasRole('SUPER-ADMIN') and hasAuthority('CREATE')")
     public HospitalEntity save(
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
@@ -33,6 +35,7 @@ public class HospitalController {
     }
 
     @PutMapping("/{hospitalId}/update")
+    @PreAuthorize(value = "hasRole('ADMIN') and hasAuthority('UPDATE')")
     private HospitalEntity update(
             @PathVariable UUID hospitalId,
             @RequestBody HospitalSaveDto hospitalRequestDto
@@ -41,6 +44,7 @@ public class HospitalController {
     }
 
     @DeleteMapping("/{hospitalId}/delete")
+    @PreAuthorize(value = "hasRole('OWNER') and hasAuthority('DELETE')")
     public String delete(
             @PathVariable UUID hospitalId
     ){
@@ -56,6 +60,7 @@ public class HospitalController {
     }
 
     @PutMapping("/{hospitalId}/changeStatus")
+    @PreAuthorize(value = "hasRole('ADMIN') and hasAuthority('CHANGE-STATUS')")
     public HospitalEntity changeStatus(
             @PathVariable UUID hospitalId,
             @RequestParam String status

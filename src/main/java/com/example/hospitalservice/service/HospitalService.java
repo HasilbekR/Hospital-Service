@@ -2,9 +2,7 @@ package com.example.hospitalservice.service;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
-import com.example.hospitalservice.Entity.LocationEntity;
 import com.example.hospitalservice.dto.HospitalSaveDto;
-import com.example.hospitalservice.dto.LocationRequestDto;
 import com.example.hospitalservice.exceptions.DataNotFoundException;
 import com.example.hospitalservice.exceptions.UserBadRequestException;
 import com.example.hospitalservice.repository.HospitalRepository;
@@ -14,8 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +24,7 @@ public class HospitalService{
 
     public HospitalEntity addHospital(HospitalSaveDto newHospital){
         HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
-        hospitalEntity.setStatus(HospitalStatus.IN_PREVENTION);
+        hospitalEntity.setStatus(HospitalStatus.ACTIVE);
         return hospitalRepository.save(hospitalEntity);
     }
 

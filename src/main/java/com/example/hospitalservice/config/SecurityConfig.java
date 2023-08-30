@@ -22,7 +22,6 @@ public class SecurityConfig {
 
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,8 +29,8 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeHttpRequests((authorizer) -> {
                     authorizer
-                            .anyRequest().permitAll();
-
+                            .requestMatchers("/hospital/api/v1/**").permitAll()
+                            .anyRequest().authenticated();
                 })
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenFilter(authenticationService, jwtService),
