@@ -25,7 +25,7 @@ public class HospitalService{
 
     public HospitalEntity addHospital(HospitalSaveDto newHospital){
         HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
-        hospitalEntity.setStatus(HospitalStatus.IN_PREVENTION);
+        hospitalEntity.setStatus(HospitalStatus.OPENED);
         return hospitalRepository.save(hospitalEntity);
     }
 
@@ -50,7 +50,7 @@ public class HospitalService{
     public void delete(UUID hospitalId){
         HospitalEntity hospitalEntity = hospitalRepository.findHospitalEntityById(hospitalId)
                 .orElseThrow(() -> new DataNotFoundException("Hospital not found"));
-        hospitalEntity.setStatus(HospitalStatus.NOT_ACTIVE);
+        hospitalEntity.setStatus(HospitalStatus.CLOSED);
         hospitalRepository.save(hospitalEntity);
     }
 
@@ -80,9 +80,8 @@ public class HospitalService{
                         () -> new DataNotFoundException("Hospital not found!"));
 
         switch (status.toUpperCase()) {
-            case "ACTIVE" -> hospitalEntity.setStatus(HospitalStatus.ACTIVE);
-            case "IN_PREVENTION" -> hospitalEntity.setStatus(HospitalStatus.IN_PREVENTION);
-            case "NOT_ACTIVE" -> hospitalEntity.setStatus(HospitalStatus.NOT_ACTIVE);
+            case "ACTIVE" -> hospitalEntity.setStatus(HospitalStatus.OPENED);
+            case "CLOSED" -> hospitalEntity.setStatus(HospitalStatus.CLOSED);
             default -> throw new UserBadRequestException("Invalid status: " + status);
         }
         hospitalRepository.save(hospitalEntity);
