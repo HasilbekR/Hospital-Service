@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @Builder
 public class HospitalData {
-    private List<HospitalEntity> hospitals;
+    private List<HospitalInfo> hospitals;
     private List<String> cities;
 }

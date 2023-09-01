@@ -3,6 +3,7 @@ package com.example.hospitalservice.controller;
 import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.dto.ExchangeDataDto;
 import com.example.hospitalservice.dto.HospitalData;
+import com.example.hospitalservice.dto.HospitalInfo;
 import com.example.hospitalservice.dto.HospitalSaveDto;
 import com.example.hospitalservice.service.HospitalService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class HospitalController {
         return ResponseEntity.ok(hospitalService.getAll(page, size));
     }
     @GetMapping("/get-all-by-city")
-    public List<HospitalEntity> getAllByCity(
+    public List<HospitalInfo> getAllByCity(
             @RequestParam String city
     ){
         return hospitalService.getAllByCity(city);
@@ -47,11 +48,11 @@ public class HospitalController {
         return ResponseEntity.ok(hospitalService.getHospitalById(hospitalId));
     }
     @PostMapping("/send-id")
-    public String getHospital(
+    public UUID getHospital(
             @RequestBody ExchangeDataDto dataDto
     ){
         if(hospitalService.getHospital(dataDto) != null) {
-            return hospitalService.getHospital(dataDto).toString();
+            return hospitalService.getHospital(dataDto);
         }
         return null;
     }

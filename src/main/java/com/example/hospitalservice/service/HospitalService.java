@@ -4,6 +4,7 @@ import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
 import com.example.hospitalservice.dto.ExchangeDataDto;
 import com.example.hospitalservice.dto.HospitalData;
+import com.example.hospitalservice.dto.HospitalInfo;
 import com.example.hospitalservice.dto.HospitalSaveDto;
 import com.example.hospitalservice.exceptions.DataNotFoundException;
 import com.example.hospitalservice.exceptions.UserBadRequestException;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,13 +33,31 @@ public class HospitalService{
 
     public HospitalData getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
+        List<HospitalEntity> hospitalEntities = hospitalRepository.findAll(pageable).getContent();
+        List<HospitalInfo> hospitalInfoList = new ArrayList<>();
+        for (HospitalEntity hospitalEntity : hospitalEntities) {
+            hospitalInfoList.add(HospitalInfo.builder()
+                    .id(hospitalEntity.getId())
+                    .name(hospitalEntity.getName())
+                    .city(hospitalEntity.getCity())
+                    .build());
+        }
         return HospitalData.builder()
-                .hospitals(hospitalRepository.findAll(pageable).getContent())
+                .hospitals(hospitalInfoList)
                 .cities(hospitalRepository.getHospitalCities()).build();
     }
 
-    public List<HospitalEntity> getAllByCity(String city){
-        return hospitalRepository.findHospitalEntityByCity(city);
+    public List<HospitalInfo> getAllByCity(String city){
+        List<HospitalEntity> hospitalEntities = hospitalRepository.findHospitalEntityByCity(city);
+        List<HospitalInfo> hospitalInfoList = new ArrayList<>();
+        for (HospitalEntity hospitalEntity : hospitalEntities) {
+            hospitalInfoList.add(HospitalInfo.builder()
+                    .id(hospitalEntity.getId())
+                    .name(hospitalEntity.getName())
+                    .city(hospitalEntity.getCity())
+                    .build());
+        }
+        return hospitalInfoList;
     }
 
     public UUID getHospital(ExchangeDataDto dataDto){
