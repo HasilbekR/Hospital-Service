@@ -17,7 +17,7 @@ public class HospitalEntity extends BaseEntity {
     private String city;
     @Column(unique = true, nullable = false)
     private String address;
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, columnDefinition = "text")
     private String location;
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL)
