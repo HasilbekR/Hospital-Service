@@ -73,6 +73,7 @@ public class HospitalService{
     }
     public StandardResponse<HospitalForFront> getHospitalById(UUID hospitalId){
         HospitalEntity hospital = hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(() -> new DataNotFoundException("Hospital not found"));
+        hospital.setLocation(null);
         HospitalForFront hospitalForFront = modelMapper.map(hospital, HospitalForFront.class);
         hospitalForFront.setLocation(getHospitalLocation(hospitalId));
         return StandardResponse.<HospitalForFront>builder().status(Status.SUCCESS)
