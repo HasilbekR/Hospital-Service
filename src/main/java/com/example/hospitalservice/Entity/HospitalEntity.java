@@ -17,8 +17,8 @@ public class HospitalEntity extends BaseEntity {
     private String city;
     @Column(unique = true, nullable = false)
     private String address;
-    @OneToOne(cascade = CascadeType.ALL)
-    private LocationEntity location;
+    @Column(unique = true, nullable = false)
+    private String location;
     private String phoneNumber;
     @OneToMany(cascade = CascadeType.ALL)
     private List<WorkingHoursEntity> workingHours;

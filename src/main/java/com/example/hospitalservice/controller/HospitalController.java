@@ -41,7 +41,7 @@ public class HospitalController {
         return hospitalService.getAllByCity(city, page, size);
     }
     @GetMapping("/{hospitalId}/get-hospital")
-    public StandardResponse<HospitalForFront> getHospital(
+    public StandardResponse<HospitalEntity> getHospital(
             @PathVariable UUID hospitalId
     ){
         return hospitalService.getHospitalById(hospitalId);

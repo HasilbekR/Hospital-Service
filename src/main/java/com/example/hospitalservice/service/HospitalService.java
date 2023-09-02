@@ -71,20 +71,10 @@ public class HospitalService{
     public UUID getHospital(ExchangeDataDto dataDto){
         return hospitalRepository.findHospitalEntitiesById(UUID.fromString(dataDto.getSource())).getId();
     }
-    public StandardResponse<HospitalForFront> getHospitalById(UUID hospitalId){
-        HospitalEntity hospital = hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(() -> new DataNotFoundException("Hospital not found"));
-        HospitalForFront hospitalForFront = HospitalForFront.builder()
-                .id(hospitalId)
-                .address(hospital.getAddress())
-                .phoneNumber(hospital.getPhoneNumber())
-                .city(hospital.getCity())
-                .workingHours(hospital.getWorkingHours())
-                .location(getHospitalLocation(hospital))
-                .name(hospital.getName())
-                .build();
-        return StandardResponse.<HospitalForFront>builder().status(Status.SUCCESS)
+    public StandardResponse<HospitalEntity> getHospitalById(UUID hospitalId){
+        return StandardResponse.<HospitalEntity>builder().status(Status.SUCCESS)
                 .message("Hospital entity")
-                .data(hospitalForFront)
+                .data(hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(() -> new DataNotFoundException("Hospital not found")))
                 .build();
     }
 
@@ -108,11 +98,13 @@ public class HospitalService{
                 .build();
     }
 
-    public String getHospitalLocation(HospitalEntity hospitalEntity) {
-       return "https://www.google.com/maps/@?api=1&map_action=map&center=" +
-                hospitalEntity.getLocation().getLatitude() + "," +
-                hospitalEntity.getLocation().getLongitude() + "&zoom=15";
-    }
+//    public String getHospitalLocation(UUID hospitalId) {
+//        HospitalEntity hospitalEntity = hospitalRepository.findHospitalEntityById(hospitalId)
+//                .orElseThrow(() -> new DataNotFoundException("Hospital not found"));
+//        return "https://www.google.com/maps/@?api=1&map_action=map&center=" +
+//                hospitalEntity.getLocation().getLatitude() + "," +
+//                hospitalEntity.getLocation().getLongitude() + "&zoom=15";
+//    }
 
     public StandardResponse<HospitalEntity> changeStatus(UUID hospitalId, String status) {
         HospitalEntity hospitalEntity = hospitalRepository
