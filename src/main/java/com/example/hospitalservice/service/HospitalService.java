@@ -47,8 +47,9 @@ public class HospitalService{
                 .cities(hospitalRepository.getHospitalCities()).build();
     }
 
-    public List<HospitalInfo> getAllByCity(String city){
-        List<HospitalEntity> hospitalEntities = hospitalRepository.findHospitalEntityByCity(city);
+    public List<HospitalInfo> getAllByCity(String city, int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        List<HospitalEntity> hospitalEntities = hospitalRepository.findHospitalEntityByCity(city, pageable).getContent();
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
         for (HospitalEntity hospitalEntity : hospitalEntities) {
             hospitalInfoList.add(HospitalInfo.builder()
