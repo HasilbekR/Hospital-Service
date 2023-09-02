@@ -19,4 +19,5 @@ public interface HospitalRepository extends JpaRepository<HospitalEntity, UUID>{
     Page<HospitalEntity> findAll(Pageable pageable);
     @Query(value = "select distinct h.city from hospital h")
     List<String> getHospitalCities();
+    Optional<HospitalEntity> findHospitalEntityByName(String name);
 }

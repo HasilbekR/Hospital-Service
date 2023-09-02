@@ -40,6 +40,12 @@ public class HospitalController {
     ){
         return hospitalService.getAllByCity(city, page, size);
     }
+    @GetMapping("/search-hospital-by-name")
+    public StandardResponse<HospitalEntity> getHospitalByName(
+            @RequestParam String name
+    ){
+        return hospitalService.getHospitalByName(name);
+    }
     @GetMapping("/{hospitalId}/get-hospital")
     public StandardResponse<HospitalEntity> getHospital(
             @PathVariable UUID hospitalId

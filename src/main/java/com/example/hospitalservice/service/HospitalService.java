@@ -127,4 +127,13 @@ public class HospitalService{
     public String getAddress(ExchangeDataDto dataDto) {
         return hospitalRepository.findHospitalEntitiesById(UUID.fromString(dataDto.getSource())).getAddress();
     }
+
+    public StandardResponse<HospitalEntity> getHospitalByName(String name) {
+        return StandardResponse.<HospitalEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Hospital entity")
+                .data(hospitalRepository.findHospitalEntityByName(name).orElseThrow(() -> new DataNotFoundException("Hospital not found")))
+                .build();
+
+    }
 }
