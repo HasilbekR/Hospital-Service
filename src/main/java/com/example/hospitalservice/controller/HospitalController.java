@@ -78,13 +78,6 @@ public class HospitalController {
         return hospitalService.delete(hospitalId);
     }
 
-    @GetMapping("/{hospitalId}/getLocation")
-    public String getLocation(
-            @PathVariable UUID hospitalId
-    ){
-       return hospitalService.getHospitalLocation(hospitalId);
-    }
-
     @PutMapping("/{hospitalId}/changeStatus")
     @PreAuthorize(value = "hasRole('ADMIN') and hasAuthority('CHANGE_STATUS')")
     public StandardResponse<HospitalEntity> changeStatus(
