@@ -24,6 +24,6 @@ public class HospitalSaveDto {
     @NotBlank(message = "Phone number must not be blank!")
     @Pattern(regexp = "^\\+998(90|91|92|93|94|95|97|98|99)[0-9]{7}$\n")
     private String phoneNumber;
-    private LocationRequestDto location;
+    private String location;
     private List<WorkingHoursCreateDto> workingHours;
 }
