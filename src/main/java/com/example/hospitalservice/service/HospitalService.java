@@ -2,10 +2,9 @@ package com.example.hospitalservice.service;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
-import com.example.hospitalservice.dto.ExchangeDataDto;
-import com.example.hospitalservice.dto.HospitalData;
-import com.example.hospitalservice.dto.HospitalInfo;
-import com.example.hospitalservice.dto.HospitalSaveDto;
+import com.example.hospitalservice.dto.*;
+import com.example.hospitalservice.dto.response.StandardResponse;
+import com.example.hospitalservice.dto.response.Status;
 import com.example.hospitalservice.exceptions.DataNotFoundException;
 import com.example.hospitalservice.exceptions.UserBadRequestException;
 import com.example.hospitalservice.repository.HospitalRepository;
@@ -25,13 +24,13 @@ public class HospitalService{
     private final HospitalRepository hospitalRepository;
     private final ModelMapper modelMapper;
 
-    public HospitalEntity addHospital(HospitalSaveDto newHospital){
+    public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital){
         HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
         hospitalEntity.setStatus(HospitalStatus.OPEN);
-        return hospitalRepository.save(hospitalEntity);
+        return StandardResponse.<HospitalEntity>builder().status(Status.SUCCESS).message("Successfully created").data(hospitalRepository.save(hospitalEntity)).build();
     }
 
-    public HospitalData getAll(int page, int size){
+    public StandardResponse<HospitalData> getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findAll(pageable).getContent();
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
@@ -42,12 +41,17 @@ public class HospitalService{
                     .city(hospitalEntity.getCity())
                     .build());
         }
-        return HospitalData.builder()
-                .hospitals(hospitalInfoList)
-                .cities(hospitalRepository.getHospitalCities()).build();
+        return StandardResponse.<HospitalData>builder()
+                .status(Status.SUCCESS)
+                .message("All hospitals")
+                .data(HospitalData.builder()
+                        .hospitals(hospitalInfoList)
+                        .cities(hospitalRepository.getHospitalCities())
+                        .build())
+                .build();
     }
 
-    public List<HospitalInfo> getAllByCity(String city, int page, int size){
+    public StandardResponse<List<HospitalInfo>> getAllByCity(String city, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findHospitalEntityByCity(city, pageable).getContent();
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
@@ -58,30 +62,43 @@ public class HospitalService{
                     .city(hospitalEntity.getCity())
                     .build());
         }
-        return hospitalInfoList;
+        return StandardResponse.<List<HospitalInfo>>builder().status(Status.SUCCESS)
+                .message("All hospitals in "+city)
+                .data(hospitalInfoList)
+                .build();
     }
 
     public UUID getHospital(ExchangeDataDto dataDto){
         return hospitalRepository.findHospitalEntitiesById(UUID.fromString(dataDto.getSource())).getId();
     }
-    public HospitalEntity getHospitalById(UUID hospitalId){
-        return hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(()-> new DataNotFoundException("Hospital not found"));
+    public StandardResponse<HospitalForFront> getHospitalById(UUID hospitalId){
+        HospitalEntity hospital = hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(() -> new DataNotFoundException("Hospital not found"));
+        HospitalForFront hospitalForFront = modelMapper.map(hospital, HospitalForFront.class);
+        hospitalForFront.setLocation(getHospitalLocation(hospitalId));
+        return StandardResponse.<HospitalForFront>builder().status(Status.SUCCESS)
+                .message("Hospital entity")
+                .data(hospitalForFront)
+                .build();
     }
 
-    public void delete(UUID hospitalId){
+    public StandardResponse<String> delete(UUID hospitalId){
         HospitalEntity hospitalEntity = hospitalRepository.findHospitalEntityById(hospitalId)
                 .orElseThrow(() -> new DataNotFoundException("Hospital not found"));
         hospitalEntity.setStatus(HospitalStatus.CLOSED);
         hospitalRepository.save(hospitalEntity);
+        return StandardResponse.<String>builder().status(Status.SUCCESS).message("Successfully deleted").build();
     }
 
 
-    public HospitalEntity update(UUID hospitalId, HospitalSaveDto update){
+    public StandardResponse<HospitalEntity> update(UUID hospitalId, HospitalSaveDto update){
         HospitalEntity hospitalEntity = hospitalRepository
                 .findHospitalEntityById(hospitalId).orElseThrow(
                         () -> new DataNotFoundException("Hospital not found!"));
         modelMapper.map(update ,hospitalEntity);
-        return hospitalRepository.save(hospitalEntity);
+        return StandardResponse.<HospitalEntity>builder().status(Status.SUCCESS)
+                .message("Successfully updated")
+                .data(hospitalRepository.save(hospitalEntity))
+                .build();
     }
 
     public String getHospitalLocation(UUID hospitalId) {
@@ -89,13 +106,12 @@ public class HospitalService{
                 .findHospitalEntityById(hospitalId)
                 .orElseThrow(() -> new DataNotFoundException("Hospital Not found!"));
 
-        return "1 = Address = " + hospitalEntity.getAddress() + " \n 2 = Location = " +
-                "https://www.google.com/maps/@?api=1&map_action=map&center=" +
+        return "https://www.google.com/maps/@?api=1&map_action=map&center=" +
                 hospitalEntity.getLocation().getLatitude() + "," +
                 hospitalEntity.getLocation().getLongitude() + "&zoom=15";
     }
 
-    public HospitalEntity changeStatus(UUID hospitalId, String status) {
+    public StandardResponse<HospitalEntity> changeStatus(UUID hospitalId, String status) {
         HospitalEntity hospitalEntity = hospitalRepository
                 .findHospitalEntityById(hospitalId).orElseThrow(
                         () -> new DataNotFoundException("Hospital not found!"));
@@ -106,7 +122,11 @@ public class HospitalService{
             default -> throw new UserBadRequestException("Invalid status: " + status);
         }
         hospitalRepository.save(hospitalEntity);
-        return hospitalEntity;
+        return StandardResponse.<HospitalEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Status successfully changed to "+status)
+                .data(hospitalEntity)
+                .build();
     }
 
     public String getAddress(ExchangeDataDto dataDto) {

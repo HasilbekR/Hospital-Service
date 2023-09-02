@@ -1,13 +1,10 @@
 package com.example.hospitalservice.controller;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
-import com.example.hospitalservice.dto.ExchangeDataDto;
-import com.example.hospitalservice.dto.HospitalData;
-import com.example.hospitalservice.dto.HospitalInfo;
-import com.example.hospitalservice.dto.HospitalSaveDto;
+import com.example.hospitalservice.dto.*;
+import com.example.hospitalservice.dto.response.StandardResponse;
 import com.example.hospitalservice.service.HospitalService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,21 +19,21 @@ public class HospitalController {
     private final HospitalService hospitalService;
     @PostMapping("/save")
     @PreAuthorize(value = "hasRole('OWNER')")
-    public ResponseEntity<HospitalEntity> save(
+    public StandardResponse<HospitalEntity> save(
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
-        return ResponseEntity.ok(hospitalService.addHospital(hospitalRequestDto));
+        return hospitalService.addHospital(hospitalRequestDto);
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<HospitalData> getAll(
+    public StandardResponse<HospitalData> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ){
-        return ResponseEntity.ok(hospitalService.getAll(page, size));
+        return hospitalService.getAll(page, size);
     }
     @GetMapping("/get-all-by-city")
-    public List<HospitalInfo> getAllByCity(
+    public StandardResponse<List<HospitalInfo>> getAllByCity(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam String city
@@ -44,10 +41,10 @@ public class HospitalController {
         return hospitalService.getAllByCity(city, page, size);
     }
     @GetMapping("/{hospitalId}/get-hospital")
-    public ResponseEntity<HospitalEntity> getHospital(
+    public StandardResponse<HospitalForFront> getHospital(
             @PathVariable UUID hospitalId
     ){
-        return ResponseEntity.ok(hospitalService.getHospitalById(hospitalId));
+        return hospitalService.getHospitalById(hospitalId);
     }
     @PostMapping("/send-id")
     public UUID getHospital(
@@ -66,20 +63,19 @@ public class HospitalController {
     }
     @PutMapping("/{hospitalId}/update")
     @PreAuthorize(value = "hasRole('SUPER_ADMIN')")
-    private ResponseEntity<HospitalEntity> update(
+    private StandardResponse<HospitalEntity> update(
             @PathVariable UUID hospitalId,
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
-        return ResponseEntity.ok(hospitalService.update(hospitalId ,hospitalRequestDto));
+        return hospitalService.update(hospitalId ,hospitalRequestDto);
     }
 
     @DeleteMapping("/{hospitalId}/delete")
     @PreAuthorize(value = "hasRole('OWNER')")
-    public ResponseEntity<String> delete(
+    public StandardResponse<String> delete(
             @PathVariable UUID hospitalId
     ){
-        hospitalService.delete(hospitalId);
-        return ResponseEntity.ok("SuccessFully deleted!");
+        return hospitalService.delete(hospitalId);
     }
 
     @GetMapping("/{hospitalId}/getLocation")
@@ -91,10 +87,10 @@ public class HospitalController {
 
     @PutMapping("/{hospitalId}/changeStatus")
     @PreAuthorize(value = "hasRole('ADMIN') and hasAuthority('CHANGE_STATUS')")
-    public ResponseEntity<HospitalEntity> changeStatus(
+    public StandardResponse<HospitalEntity> changeStatus(
             @PathVariable UUID hospitalId,
             @RequestParam String status
     ){
-        return ResponseEntity.ok(hospitalService.changeStatus(hospitalId, status));
+        return hospitalService.changeStatus(hospitalId, status);
     }
 }
