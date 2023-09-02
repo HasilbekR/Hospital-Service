@@ -56,6 +56,12 @@ public class HospitalController {
         }
         return null;
     }
+    @PostMapping("/send-address")
+    public String getAddress(
+            @RequestBody ExchangeDataDto dataDto
+    ){
+        return hospitalService.getAddress(dataDto);
+    }
     @PutMapping("/{hospitalId}/update")
     @PreAuthorize(value = "hasRole('SUPER_ADMIN')")
     private ResponseEntity<HospitalEntity> update(

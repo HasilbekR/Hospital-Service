@@ -108,4 +108,7 @@ public class HospitalService{
         return hospitalEntity;
     }
 
+    public String getAddress(ExchangeDataDto dataDto) {
+        return hospitalRepository.findHospitalEntitiesById(UUID.fromString(dataDto.getSource())).getAddress();
+    }
 }
