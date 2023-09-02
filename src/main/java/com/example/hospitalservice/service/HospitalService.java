@@ -73,9 +73,15 @@ public class HospitalService{
     }
     public StandardResponse<HospitalForFront> getHospitalById(UUID hospitalId){
         HospitalEntity hospital = hospitalRepository.findHospitalEntityById(hospitalId).orElseThrow(() -> new DataNotFoundException("Hospital not found"));
-        hospital.setLocation(null);
-        HospitalForFront hospitalForFront = modelMapper.map(hospital, HospitalForFront.class);
-        hospitalForFront.setLocation(getHospitalLocation(hospitalId));
+        HospitalForFront hospitalForFront = HospitalForFront.builder()
+                .id(hospitalId)
+                .address(hospital.getAddress())
+                .phoneNumber(hospital.getPhoneNumber())
+                .city(hospital.getCity())
+                .workingHours(hospital.getWorkingHours())
+                .location(getHospitalLocation(hospital))
+                .name(hospital.getName())
+                .build();
         return StandardResponse.<HospitalForFront>builder().status(Status.SUCCESS)
                 .message("Hospital entity")
                 .data(hospitalForFront)
@@ -102,12 +108,8 @@ public class HospitalService{
                 .build();
     }
 
-    public String getHospitalLocation(UUID hospitalId) {
-        HospitalEntity hospitalEntity = hospitalRepository
-                .findHospitalEntityById(hospitalId)
-                .orElseThrow(() -> new DataNotFoundException("Hospital Not found!"));
-
-        return "https://www.google.com/maps/@?api=1&map_action=map&center=" +
+    public String getHospitalLocation(HospitalEntity hospitalEntity) {
+       return "https://www.google.com/maps/@?api=1&map_action=map&center=" +
                 hospitalEntity.getLocation().getLatitude() + "," +
                 hospitalEntity.getLocation().getLongitude() + "&zoom=15";
     }
