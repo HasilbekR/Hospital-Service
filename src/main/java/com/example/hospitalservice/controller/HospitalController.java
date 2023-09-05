@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,24 +27,27 @@ public class HospitalController {
     @GetMapping("/get-all")
     public StandardResponse<HospitalData> getAll(
             @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size
-    ){
-        return hospitalService.getAll(page, size);
-    }
-    @GetMapping("/get-all-by-city")
-    public StandardResponse<HospitalData> getAllByCity(
-            @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam String city
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String name
+
     ){
-        return hospitalService.getAllByCity(city, page, size);
+        return hospitalService.getAll(page, size, city, name);
     }
-    @GetMapping("/search-hospital-by-name")
-    public StandardResponse<HospitalEntity> getHospitalByName(
-            @RequestParam String name
-    ){
-        return hospitalService.getHospitalByName(name);
-    }
+//    @GetMapping("/get-all-by-city")
+//    public StandardResponse<HospitalData> getAllByCity(
+//            @RequestParam(required = false, defaultValue = "0") int page,
+//            @RequestParam(required = false, defaultValue = "10") int size,
+//            @RequestParam String city
+//    ){
+//        return hospitalService.getAllByCity(city, page, size);
+//    }
+//    @GetMapping("/search-hospital-by-name")
+//    public StandardResponse<HospitalEntity> getHospitalByName(
+//            @RequestParam String name
+//    ){
+//        return hospitalService.getHospitalByName(name);
+//    }
     @GetMapping("/{hospitalId}/get-hospital")
     public StandardResponse<HospitalEntity> getHospital(
             @PathVariable UUID hospitalId

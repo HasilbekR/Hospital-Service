@@ -30,7 +30,9 @@ public class HospitalService{
         return StandardResponse.<HospitalEntity>builder().status(Status.SUCCESS).message("Successfully created").data(hospitalRepository.save(hospitalEntity)).build();
     }
 
-    public StandardResponse<HospitalData> getAll(int page, int size){
+    public StandardResponse<HospitalData> getAll(int page, int size, String city, String name){
+        if(city != null) return getAllByCity(city, page, size);
+        if(name != null) return getHospitalByName(name);
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findAll(pageable).getContent();
         int hospitalNumbers = hospitalRepository.findAll().size();
@@ -135,11 +137,18 @@ public class HospitalService{
         return hospitalRepository.findHospitalEntitiesById(UUID.fromString(dataDto.getSource())).getAddress();
     }
 
-    public StandardResponse<HospitalEntity> getHospitalByName(String name) {
-        return StandardResponse.<HospitalEntity>builder()
+    public StandardResponse<HospitalData> getHospitalByName(String name) {
+        HospitalEntity hospital = hospitalRepository.findHospitalEntityByName(name).orElseThrow(() -> new DataNotFoundException("Hospital not found"));
+        return StandardResponse.<HospitalData>builder()
                 .status(Status.SUCCESS)
                 .message("Hospital entity")
-                .data(hospitalRepository.findHospitalEntityByName(name).orElseThrow(() -> new DataNotFoundException("Hospital not found")))
+                .data(HospitalData.builder().hospitals(
+                        List.of(HospitalInfo.builder()
+                                .id(hospital.getId())
+                                .name(hospital.getName())
+                                .city(hospital.getCity())
+                                .build()))
+                        .build())
                 .build();
 
     }
