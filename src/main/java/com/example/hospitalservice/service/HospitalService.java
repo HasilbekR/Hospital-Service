@@ -57,7 +57,7 @@ public class HospitalService{
     public StandardResponse<HospitalData> getAllByCity(String city, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findHospitalEntityByCity(city, pageable).getContent();
-        int hospitalNumbers = hospitalRepository.findAll().size();
+        int hospitalNumbers = hospitalRepository.findAllByCity(city).size();
         int pagesCount = (int) Math.ceil(hospitalNumbers/size);
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
         for (HospitalEntity hospitalEntity : hospitalEntities) {
