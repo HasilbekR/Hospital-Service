@@ -33,7 +33,7 @@ public class HospitalController {
         return hospitalService.getAll(page, size);
     }
     @GetMapping("/get-all-by-city")
-    public StandardResponse<List<HospitalInfo>> getAllByCity(
+    public StandardResponse<HospitalData> getAllByCity(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam String city
