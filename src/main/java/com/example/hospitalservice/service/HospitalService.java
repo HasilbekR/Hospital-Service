@@ -33,6 +33,8 @@ public class HospitalService{
     public StandardResponse<HospitalData> getAll(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findAll(pageable).getContent();
+        int hospitalNumbers = hospitalRepository.findAll().size();
+        int pagesCount = (int) Math.ceil(hospitalNumbers/size);
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
         for (HospitalEntity hospitalEntity : hospitalEntities) {
             hospitalInfoList.add(HospitalInfo.builder()
@@ -47,6 +49,7 @@ public class HospitalService{
                 .data(HospitalData.builder()
                         .hospitals(hospitalInfoList)
                         .cities(hospitalRepository.getHospitalCities())
+                        .pagesCount(pagesCount)
                         .build())
                 .build();
     }
@@ -54,6 +57,8 @@ public class HospitalService{
     public StandardResponse<HospitalData> getAllByCity(String city, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findHospitalEntityByCity(city, pageable).getContent();
+        int hospitalNumbers = hospitalRepository.findAll().size();
+        int pagesCount = (int) Math.ceil(hospitalNumbers/size);
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
         for (HospitalEntity hospitalEntity : hospitalEntities) {
             hospitalInfoList.add(HospitalInfo.builder()
@@ -64,7 +69,7 @@ public class HospitalService{
         }
         return StandardResponse.<HospitalData>builder().status(Status.SUCCESS)
                 .message("All hospitals in "+city)
-                .data(HospitalData.builder().hospitals(hospitalInfoList).pagesCount(3).build())
+                .data(HospitalData.builder().hospitals(hospitalInfoList).pagesCount(pagesCount).build())
                 .build();
     }
 
