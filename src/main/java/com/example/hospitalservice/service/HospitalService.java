@@ -138,16 +138,19 @@ public class HospitalService{
     }
 
     public StandardResponse<HospitalData> getHospitalByName(String name) {
-        HospitalEntity hospital = hospitalRepository.findHospitalEntityByName(name).orElseThrow(() -> new DataNotFoundException("Hospital not found"));
+        List<HospitalEntity> hospitals = hospitalRepository.findHospitalEntitiesByNameContainingIgnoreCase(name);
+        List<HospitalInfo> hospitalInfoList = new ArrayList<>();
+        for (HospitalEntity hospitalEntity : hospitals) {
+            hospitalInfoList.add(HospitalInfo.builder()
+                    .id(hospitalEntity.getId())
+                    .name(hospitalEntity.getName())
+                    .city(hospitalEntity.getCity())
+                    .build());
+        }
         return StandardResponse.<HospitalData>builder()
                 .status(Status.SUCCESS)
                 .message("Hospital entity")
-                .data(HospitalData.builder().hospitals(
-                        List.of(HospitalInfo.builder()
-                                .id(hospital.getId())
-                                .name(hospital.getName())
-                                .city(hospital.getCity())
-                                .build()))
+                .data(HospitalData.builder().hospitals(hospitalInfoList)
                         .build())
                 .build();
 
