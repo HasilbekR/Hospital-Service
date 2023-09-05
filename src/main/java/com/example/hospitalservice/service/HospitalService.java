@@ -34,7 +34,8 @@ public class HospitalService{
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findAll(pageable).getContent();
         int hospitalNumbers = hospitalRepository.findAll().size();
-        int pagesCount = (int) Math.ceil(hospitalNumbers/size);
+        int pagesCount = hospitalNumbers/size;
+        if(hospitalNumbers%size != 0) pagesCount++;
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
         for (HospitalEntity hospitalEntity : hospitalEntities) {
             hospitalInfoList.add(HospitalInfo.builder()
@@ -58,7 +59,8 @@ public class HospitalService{
         Pageable pageable = PageRequest.of(page, size);
         List<HospitalEntity> hospitalEntities = hospitalRepository.findHospitalEntityByCity(city, pageable).getContent();
         int hospitalNumbers = hospitalRepository.findAllByCity(city).size();
-        int pagesCount = (int) Math.ceil(hospitalNumbers/size);
+        int pagesCount = hospitalNumbers/size;
+        if(hospitalNumbers%size != 0) pagesCount++;
         List<HospitalInfo> hospitalInfoList = new ArrayList<>();
         for (HospitalEntity hospitalEntity : hospitalEntities) {
             hospitalInfoList.add(HospitalInfo.builder()
