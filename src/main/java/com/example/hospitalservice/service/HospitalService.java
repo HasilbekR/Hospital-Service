@@ -155,4 +155,9 @@ public class HospitalService{
                 .build();
 
     }
+
+    public String getName(ExchangeDataDto dataDto) {
+        HospitalEntity hospital = hospitalRepository.findById(UUID.fromString(dataDto.getSource())).orElseThrow(() -> new DataNotFoundException("Hospital not found"));
+        return hospital.getName();
+    }
 }

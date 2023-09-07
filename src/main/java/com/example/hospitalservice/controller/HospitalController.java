@@ -34,20 +34,6 @@ public class HospitalController {
     ){
         return hospitalService.getAll(page, size, city, name);
     }
-//    @GetMapping("/get-all-by-city")
-//    public StandardResponse<HospitalData> getAllByCity(
-//            @RequestParam(required = false, defaultValue = "0") int page,
-//            @RequestParam(required = false, defaultValue = "10") int size,
-//            @RequestParam String city
-//    ){
-//        return hospitalService.getAllByCity(city, page, size);
-//    }
-//    @GetMapping("/search-hospital-by-name")
-//    public StandardResponse<HospitalEntity> getHospitalByName(
-//            @RequestParam String name
-//    ){
-//        return hospitalService.getHospitalByName(name);
-//    }
     @GetMapping("/{hospitalId}/get-hospital")
     public StandardResponse<HospitalEntity> getHospital(
             @PathVariable UUID hospitalId
@@ -68,6 +54,12 @@ public class HospitalController {
             @RequestBody ExchangeDataDto dataDto
     ){
         return hospitalService.getAddress(dataDto);
+    }
+    @PostMapping("/send-name")
+    public String getName(
+            @RequestBody ExchangeDataDto dataDto
+    ){
+        return hospitalService.getName(dataDto);
     }
     @PutMapping("/{hospitalId}/update")
     @PreAuthorize(value = "hasRole('SUPER_ADMIN')")
