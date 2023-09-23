@@ -19,6 +19,8 @@ public class HospitalSaveDto {
     private String name;
     @NotBlank(message = "City must not be blank!")
     private String city;
+    @NotBlank(message = "Image must not be blank!")
+    private String hospitalImage;
     @NotBlank(message = "Address must not be blank!")
     private String address;
     @NotBlank(message = "Phone number must not be blank!")

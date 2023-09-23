@@ -26,6 +26,7 @@ public class HospitalService{
 
     public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital){
         HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
+        hospitalEntity.setHospitalImage(newHospital.getHospitalImage());
         hospitalEntity.setStatus(HospitalStatus.OPEN);
         return StandardResponse.<HospitalEntity>builder().status(Status.SUCCESS).message("Successfully created").data(hospitalRepository.save(hospitalEntity)).build();
     }
