@@ -17,7 +17,7 @@ public class HospitalController {
 
     private final HospitalService hospitalService;
     @PostMapping("/save")
-    @PreAuthorize(value = "hasRole('OWNER')")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     public StandardResponse<HospitalEntity> save(
             @RequestBody HospitalSaveDto hospitalRequestDto
             ){
@@ -62,7 +62,7 @@ public class HospitalController {
         return hospitalService.getName(dataDto);
     }
     @PutMapping("/{hospitalId}/update")
-    @PreAuthorize(value = "hasRole('SUPER_ADMIN')")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     private StandardResponse<HospitalEntity> update(
             @PathVariable UUID hospitalId,
             @RequestBody HospitalSaveDto hospitalRequestDto
