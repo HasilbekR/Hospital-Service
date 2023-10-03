@@ -2,6 +2,7 @@ package com.example.hospitalservice.service;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
+import com.example.hospitalservice.Entity.WorkingHoursEntity;
 import com.example.hospitalservice.dto.*;
 import com.example.hospitalservice.dto.response.StandardResponse;
 import com.example.hospitalservice.dto.response.Status;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +27,21 @@ public class HospitalService{
     private final HospitalRepository hospitalRepository;
     private final ModelMapper modelMapper;
 
-    public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital){
+    public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital) {
         HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
         hospitalEntity.setStatus(HospitalStatus.OPEN);
-        return StandardResponse.<HospitalEntity>builder().status(Status.SUCCESS).message("Successfully created").data(hospitalRepository.save(hospitalEntity)).build();
+
+        // Map a single WorkingHoursCreateDto to WorkingHoursEntity
+        if (newHospital.getWorkingHours() != null) {
+            WorkingHoursEntity workingHoursEntity = modelMapper.map(newHospital.getWorkingHours(), WorkingHoursEntity.class);
+            hospitalEntity.setWorkingHours(Collections.singletonList(workingHoursEntity));
+        }
+
+        return StandardResponse.<HospitalEntity>builder()
+                .status(Status.SUCCESS)
+                .message("Successfully created")
+                .data(hospitalRepository.save(hospitalEntity))
+                .build();
     }
 
     public StandardResponse<HospitalData> getAll(int page, int size, String city, String name){
