@@ -37,11 +37,12 @@ public class HospitalService{
 
         // Set the workingHoursEntities in the hospitalEntity
         hospitalEntity.setWorkingHours(workingHoursEntities);
+        HospitalEntity save = hospitalRepository.save(hospitalEntity);
 
         return StandardResponse.<HospitalEntity>builder()
                 .status(Status.SUCCESS)
                 .message("Successfully created")
-                .data(hospitalRepository.save(hospitalEntity))
+                .data(save)
                 .build();
     }
 
