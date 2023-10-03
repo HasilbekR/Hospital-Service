@@ -16,10 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +29,14 @@ public class HospitalService{
         HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
         hospitalEntity.setStatus(HospitalStatus.OPEN);
 
-        // Map a single WorkingHoursCreateDto to WorkingHoursEntity
+        // Create a list of WorkingHoursEntity from WorkingHoursCreateDto
+        List<WorkingHoursEntity> workingHoursEntities = new ArrayList<>();
         if (newHospital.getWorkingHours() != null) {
-            WorkingHoursEntity workingHoursEntity = modelMapper.map(newHospital.getWorkingHours(), WorkingHoursEntity.class);
-            hospitalEntity.setWorkingHours(Collections.singletonList(workingHoursEntity));
+            workingHoursEntities.add(modelMapper.map(newHospital.getWorkingHours(), WorkingHoursEntity.class));
         }
+
+        // Set the workingHoursEntities in the hospitalEntity
+        hospitalEntity.setWorkingHours(workingHoursEntities);
 
         return StandardResponse.<HospitalEntity>builder()
                 .status(Status.SUCCESS)
