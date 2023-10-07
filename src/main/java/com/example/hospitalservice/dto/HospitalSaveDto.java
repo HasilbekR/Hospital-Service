@@ -25,5 +25,9 @@ public class HospitalSaveDto {
     @Pattern(regexp = "^\\+998(90|91|92|93|94|95|97|98|99)[0-9]{7}$\n")
     private String phoneNumber;
     private String location;
-    private WorkingHoursCreateDto workingHours;
-}
+    @NotBlank(message = "Line must not be blank!")
+    private String dayOfWeek;
+    @NotBlank(message = "Line must not be blank!")
+    private String openingTime;
+    @NotBlank(message = "Line must not be blank!")
+    private String closingTime;}
