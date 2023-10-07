@@ -29,17 +29,15 @@ public class HospitalService{
         HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
         hospitalEntity.setStatus(HospitalStatus.OPEN);
 
-//         Create a list of WorkingHoursEntity from WorkingHoursCreateDto
+        // Create a list of WorkingHoursEntity from WorkingHoursCreateDto
         List<WorkingHoursEntity> workingHoursEntities = new ArrayList<>();
-        if (hospitalEntity.getWorkingHours() != null) {
-            workingHoursEntities.add(modelMapper.map(hospitalEntity.getWorkingHours(), WorkingHoursEntity.class));
+        if (newHospital.getWorkingHours() != null) {
+            workingHoursEntities.add(modelMapper.map(newHospital.getWorkingHours(), WorkingHoursEntity.class));
         }
-        WorkingHoursEntity workingHoursEntity = new WorkingHoursEntity();
+//        workingHoursEntities.add(newHospital.)
+
         // Set the workingHoursEntities in the hospitalEntity
-        workingHoursEntity.setDayOfWeek(newHospital.getDayOfWeek());
-        workingHoursEntity.setOpeningTime(newHospital.getOpeningTime());
-        workingHoursEntity.setClosingTime(newHospital.getClosingTime());
-        workingHoursEntities.add((WorkingHoursEntity) List.of(workingHoursEntity));
+        hospitalEntity.setWorkingHours(workingHoursEntities);
         HospitalEntity save = hospitalRepository.save(hospitalEntity);
 
         return StandardResponse.<HospitalEntity>builder()
