@@ -26,25 +26,28 @@ public class HospitalService{
     private final ModelMapper modelMapper;
 
     public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital) {
-//        HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
         HospitalEntity hospitalEntity = new HospitalEntity();
         hospitalEntity.setName(newHospital.getName());
         hospitalEntity.setPhoneNumber(newHospital.getPhoneNumber());
         hospitalEntity.setCity(newHospital.getCity());
         hospitalEntity.setLocation(newHospital.getLocation());
         hospitalEntity.setAddress(newHospital.getAddress());
-        hospitalEntity.getWorkingHours().add((WorkingHoursEntity) List.of(newHospital.getWorkingHours()));
         hospitalEntity.setStatus(HospitalStatus.OPEN);
 
-        // Create a list of WorkingHoursEntity from WorkingHoursCreateDto
-//        List<WorkingHoursEntity> workingHoursEntities = new ArrayList<>();
-//        if (newHospital.getWorkingHours() != null) {
-//            workingHoursEntities.add(modelMapper.map(newHospital.getWorkingHours(), WorkingHoursEntity.class));
-//        }
-//        workingHoursEntities.add(newHospital.)
+        // Create and populate WorkingHoursEntity objects
+        List<WorkingHoursEntity> workingHoursEntities = new ArrayList<>();
+        WorkingHoursEntity workingHoursEntity = new WorkingHoursEntity();
+
+        // Assuming newHospital provides the working hours details in its fields
+        workingHoursEntity.setDayOfWeek(newHospital.getWorkingHours().getDayOfWeek());
+        workingHoursEntity.setOpeningTime(newHospital.getWorkingHours().getOpeningTime());
+        workingHoursEntity.setClosingTime(newHospital.getWorkingHours().getClosingTime());
+
+        workingHoursEntities.add(workingHoursEntity);
 
         // Set the workingHoursEntities in the hospitalEntity
-//        hospitalEntity.setWorkingHours(workingHoursEntities);
+        hospitalEntity.setWorkingHours(workingHoursEntities);
+
         HospitalEntity save = hospitalRepository.save(hospitalEntity);
 
         return StandardResponse.<HospitalEntity>builder()
