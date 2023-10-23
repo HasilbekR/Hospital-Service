@@ -32,6 +32,7 @@ public class HospitalController {
             @RequestParam(required = false) String name
 
     ){
+        if(page != 0) page = page-1;
         return hospitalService.getAll(page, size, city, name);
     }
     @GetMapping("/{hospitalId}/get-hospital")
