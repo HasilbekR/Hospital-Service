@@ -2,7 +2,6 @@ package com.example.hospitalservice.service;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
-import com.example.hospitalservice.Entity.WorkingHoursEntity;
 import com.example.hospitalservice.dto.*;
 import com.example.hospitalservice.dto.response.StandardResponse;
 import com.example.hospitalservice.dto.response.Status;
@@ -26,28 +25,8 @@ public class HospitalService{
     private final ModelMapper modelMapper;
 
     public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital) {
-        HospitalEntity hospitalEntity = new HospitalEntity();
-        hospitalEntity.setName(newHospital.getName());
-        hospitalEntity.setPhoneNumber(newHospital.getPhoneNumber());
-        hospitalEntity.setCity(newHospital.getCity());
-        hospitalEntity.setLocation(newHospital.getLocation());
-        hospitalEntity.setAddress(newHospital.getAddress());
+        HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
         hospitalEntity.setStatus(HospitalStatus.OPEN);
-
-        // Create and populate WorkingHoursEntity objects
-        List<WorkingHoursEntity> workingHoursEntities = new ArrayList<>();
-        WorkingHoursEntity workingHoursEntity = new WorkingHoursEntity();
-
-        // Assuming newHospital provides the working hours details in its fields
-        workingHoursEntity.setDayOfWeek(newHospital.getWorkingHours().getDayOfWeek());
-        workingHoursEntity.setOpeningTime(newHospital.getWorkingHours().getOpeningTime());
-        workingHoursEntity.setClosingTime(newHospital.getWorkingHours().getClosingTime());
-
-        workingHoursEntities.add(workingHoursEntity);
-
-        // Set the workingHoursEntities in the hospitalEntity
-        hospitalEntity.setWorkingHours(workingHoursEntities);
-
         HospitalEntity save = hospitalRepository.save(hospitalEntity);
 
         return StandardResponse.<HospitalEntity>builder()
