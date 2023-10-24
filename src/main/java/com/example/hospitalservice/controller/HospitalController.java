@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -19,9 +20,10 @@ public class HospitalController {
     @PostMapping("/save")
     @PreAuthorize(value = "hasRole('ADMIN')")
     public StandardResponse<HospitalEntity> save(
-            @RequestBody HospitalSaveDto hospitalRequestDto
+            @RequestBody HospitalSaveDto hospitalRequestDto,
+            Principal principal
             ){
-        return hospitalService.addHospital(hospitalRequestDto);
+        return hospitalService.addHospital(hospitalRequestDto, principal);
     }
 
     @GetMapping("/get-all")

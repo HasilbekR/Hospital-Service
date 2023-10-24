@@ -18,6 +18,9 @@ spring:
         hibernate:
           format_sql: true
 
+services:
+  set-employment: http://USER-SERVICE/user/set-employment
+
 eureka:
   client:
     service-url:
