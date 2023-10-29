@@ -2,7 +2,6 @@ package com.example.hospitalservice.service;
 
 import com.example.hospitalservice.Entity.HospitalEntity;
 import com.example.hospitalservice.Entity.HospitalStatus;
-import com.example.hospitalservice.Entity.WorkingHoursEntity;
 import com.example.hospitalservice.dto.*;
 import com.example.hospitalservice.dto.response.StandardResponse;
 import com.example.hospitalservice.dto.response.Status;
@@ -15,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,31 +24,13 @@ import java.util.UUID;
 public class HospitalService{
     private final HospitalRepository hospitalRepository;
     private final ModelMapper modelMapper;
+    private final UserService userService;
 
-    public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital) {
-        HospitalEntity hospitalEntity = new HospitalEntity();
-        hospitalEntity.setName(newHospital.getName());
-        hospitalEntity.setPhoneNumber(newHospital.getPhoneNumber());
-        hospitalEntity.setCity(newHospital.getCity());
-        hospitalEntity.setLocation(newHospital.getLocation());
-        hospitalEntity.setAddress(newHospital.getAddress());
+    public StandardResponse<HospitalEntity> addHospital(HospitalSaveDto newHospital, Principal principal) {
+        HospitalEntity hospitalEntity = modelMapper.map(newHospital, HospitalEntity.class);
         hospitalEntity.setStatus(HospitalStatus.OPEN);
-
-        // Create and populate WorkingHoursEntity objects
-        List<WorkingHoursEntity> workingHoursEntities = new ArrayList<>();
-        WorkingHoursEntity workingHoursEntity = new WorkingHoursEntity();
-
-        // Assuming newHospital provides the working hours details in its fields
-        workingHoursEntity.setDayOfWeek(newHospital.getWorkingHours().getDayOfWeek());
-        workingHoursEntity.setOpeningTime(newHospital.getWorkingHours().getOpeningTime());
-        workingHoursEntity.setClosingTime(newHospital.getWorkingHours().getClosingTime());
-
-        workingHoursEntities.add(workingHoursEntity);
-
-        // Set the workingHoursEntities in the hospitalEntity
-        hospitalEntity.setWorkingHours(workingHoursEntities);
-
         HospitalEntity save = hospitalRepository.save(hospitalEntity);
+        userService.setEmployment(principal, hospitalEntity.getId());
 
         return StandardResponse.<HospitalEntity>builder()
                 .status(Status.SUCCESS)
@@ -133,14 +115,6 @@ public class HospitalService{
                 .data(hospitalRepository.save(hospitalEntity))
                 .build();
     }
-
-//    public String getHospitalLocation(UUID hospitalId) {
-//        HospitalEntity hospitalEntity = hospitalRepository.findHospitalEntityById(hospitalId)
-//                .orElseThrow(() -> new DataNotFoundException("Hospital not found"));
-//        return "https://www.google.com/maps/@?api=1&map_action=map&center=" +
-//                hospitalEntity.getLocation().getLatitude() + "," +
-//                hospitalEntity.getLocation().getLongitude() + "&zoom=15";
-//    }
 
     public StandardResponse<HospitalEntity> changeStatus(UUID hospitalId, String status) {
         HospitalEntity hospitalEntity = hospitalRepository
